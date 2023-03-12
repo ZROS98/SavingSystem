@@ -7,15 +7,21 @@ namespace SavingSystem
 {
     public class SavingLoadingController : MonoBehaviour
     {
-        private string SavePath => $"{Application.persistentDataPath}/save.txt";
-        
+        private string SavePath
+        {
+            get
+            {
+                return $"{Application.persistentDataPath}/save.txt";
+            }
+        }
+
         public void Save ()
         {
             var state = LoadFile();
             CaptureState(state);
             SaveFile(state);
         }
-        
+
         public void Load ()
         {
             var state = LoadFile();
