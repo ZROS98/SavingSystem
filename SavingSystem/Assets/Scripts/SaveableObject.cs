@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace SavingSystem
 {
-    public class SaveableObject : MonoBehaviour, ISaveable
+    public class SaveableObject : MonoBehaviour
     {
         [field: SerializeField]
         private string ObjectId { get; set; } = string.Empty;
