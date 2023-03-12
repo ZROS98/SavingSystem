@@ -30,13 +30,5 @@ namespace SavingSystem
             Level = saveData.level;
             Xp = saveData.xp;
         }
-
-        [Serializable]
-        private struct SaveData
-        {
-            public string name;
-            public int level;
-            public int xp;
-        }
     }
 }
