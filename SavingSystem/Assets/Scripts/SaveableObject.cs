@@ -35,7 +35,7 @@ namespace SavingSystem
 
         public void RestoreState (object state)
         {
-            var stateDictionary = new Dictionary<string, object>();
+            var stateDictionary = (Dictionary<string, object>)state;
 
             foreach (ISaveable saveable in GetComponents<ISaveable>())
             {
