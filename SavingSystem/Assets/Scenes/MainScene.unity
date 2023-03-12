@@ -446,7 +446,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 901364827}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1139689062}
+        m_TargetAssemblyTypeName: SavingSystem.SavingLoadingController, Assembly-CSharp
+        m_MethodName: Load
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &901364827
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -767,6 +779,50 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1114899267}
   m_CullTransparentMesh: 1
+--- !u!1 &1139689061
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1139689063}
+  - component: {fileID: 1139689062}
+  m_Layer: 0
+  m_Name: SaveAndLoadSystem
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1139689062
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1139689061}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ae1d6902deb80da4aa57c8362b47f15d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &1139689063
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1139689061}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1141538436
 GameObject:
   m_ObjectHideFlags: 0
@@ -777,6 +833,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1141538438}
   - component: {fileID: 1141538437}
+  - component: {fileID: 1141538439}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -796,7 +853,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: afbe6e972f65ede40ab968946695da22, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <ObjectId>k__BackingField: 566af96d-78df-415c-9e4f-6084f1788ee6
+  <ObjectId>k__BackingField: 0723f257-7c09-402c-a207-51d4a70f6d77
 --- !u!4 &1141538438
 Transform:
   m_ObjectHideFlags: 0
@@ -810,8 +867,23 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1141538439
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1141538436}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7fdad15ba2a384441b67d335cf76a22a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <Name>k__BackingField: 0
+  <Level>k__BackingField: 1
+  <Xp>k__BackingField: 0
 --- !u!1 &1214242416
 GameObject:
   m_ObjectHideFlags: 0
@@ -928,7 +1000,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1296947796}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1139689062}
+        m_TargetAssemblyTypeName: SavingSystem.SavingLoadingController, Assembly-CSharp
+        m_MethodName: Save
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1296947796
 MonoBehaviour:
   m_ObjectHideFlags: 0
