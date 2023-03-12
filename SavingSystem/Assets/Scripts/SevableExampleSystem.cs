@@ -11,10 +11,6 @@ namespace SavingSystem
         private int Level { get; set; } = 1;
         [field: SerializeField]
         private int Xp { get; set; } = 0;
-        [field: SerializeField]
-        private Vector3 Position { get; set; } = Vector3.zero; 
-        [field: SerializeField]
-        private Quaternion Rotation { get; set; } = Quaternion.identity;
 
         public object CaptureState ()
         {
@@ -23,8 +19,6 @@ namespace SavingSystem
                 name = Name,
                 level = Level,
                 xp = Xp,
-                position = Position,
-                rotation = Rotation
             };
         }
 
@@ -35,8 +29,6 @@ namespace SavingSystem
             Name = saveData.name;
             Level = saveData.level;
             Xp = saveData.xp;
-            Position = saveData.position;
-            Rotation = saveData.rotation;
         }
 
         [Serializable]
@@ -45,8 +37,6 @@ namespace SavingSystem
             public string name;
             public int level;
             public int xp;
-            public Vector3 position;
-            public Quaternion rotation;
         }
     }
 }
