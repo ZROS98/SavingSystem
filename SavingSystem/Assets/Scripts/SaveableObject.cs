@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Newtonsoft.Json;
 using UnityEngine;
 
 namespace SavingSystem
@@ -11,14 +12,8 @@ namespace SavingSystem
 
         public string CurrentId
         {
-            get
-            {
-                return ObjectId;
-            }
-            set
-            {
-                ObjectId = value;
-            }
+            get { return ObjectId; }
+            set { ObjectId = value; }
         }
 
         public object CaptureState ()
@@ -35,7 +30,16 @@ namespace SavingSystem
 
         public void RestoreState (object state)
         {
-            var stateDictionary = (Dictionary<string, object>)state;
+            Dictionary<string, object> stateDictionary = null;
+
+            try
+            {
+                stateDictionary = JsonConvert.DeserializeObject<Dictionary<string, object>>(state.ToString());
+            }
+            catch (Exception ex)
+            {
+                stateDictionary = (Dictionary<string, object>)state;
+            }
 
             foreach (ISaveable saveable in GetComponents<ISaveable>())
             {
@@ -47,7 +51,7 @@ namespace SavingSystem
                 }
             }
         }
-        
+
         [ContextMenu("Generate Id")]
         private void GenerateId ()
         {
