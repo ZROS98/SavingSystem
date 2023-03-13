@@ -1,9 +1,10 @@
 using System;
+using Newtonsoft.Json;
 using UnityEngine;
 
 namespace SavingSystem
 {
-    public class SevableExampleSystem : MonoBehaviour, ISaveable
+    public class SaveableExampleSystem : MonoBehaviour, ISaveable
     {
         [field: SerializeField]
         private string Name { get; set; } = String.Empty;
@@ -24,7 +25,16 @@ namespace SavingSystem
 
         public void RestoreState (object state)
         {
-            SaveData saveData = (SaveData)state;
+            SaveData saveData = new SaveData();
+
+            try
+            {
+                saveData = JsonConvert.DeserializeObject<SaveData>(state.ToString());
+            }
+            catch (Exception ex)
+            {
+                saveData = (SaveData)state;
+            }
 
             Name = saveData.name;
             Level = saveData.level;
