@@ -25,20 +25,39 @@ namespace SavingSystem
 
         public void RestoreState (object state)
         {
+            SaveData saveData = DeserializeFileToSaveData(state);
+            
+            Name = saveData.name;
+            Level = saveData.level;
+            Xp = saveData.xp;
+        }
+
+        private SaveData DeserializeFileToSaveData (object state)
+        {
             SaveData saveData;
 
             try
             {
-                saveData = JsonConvert.DeserializeObject<SaveData>(state.ToString());
+                saveData = DeserializeAsJson(state);
             }
             catch (JsonReaderException)
             {
-                saveData = (SaveData)state;
+                saveData = DeserializeAsBinary(state);
             }
 
-            Name = saveData.name;
-            Level = saveData.level;
-            Xp = saveData.xp;
+            return saveData;
+        }
+
+        private SaveData DeserializeAsJson (object state)
+        {
+            SaveData saveData = JsonConvert.DeserializeObject<SaveData>(state.ToString());
+            return saveData;
+        }
+
+        private SaveData DeserializeAsBinary (object state)
+        {
+            SaveData saveData = (SaveData)state;
+            return saveData;
         }
     }
 }
