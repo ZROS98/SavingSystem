@@ -40,23 +40,42 @@ namespace SavingSystem
                 return new Dictionary<string, object>();
             }
 
-            string fileContents = File.ReadAllText(SavePath);
-            Dictionary<string, object> dictionary;
+            return DeserializeFileToDictionary();
+        }
 
+        private Dictionary<string, object> DeserializeFileToDictionary ()
+        {
+            Dictionary<string, object> dictionary;
+            
             try
             {
-                dictionary = JsonConvert.DeserializeObject<Dictionary<string, object>>(fileContents);
+                dictionary = DeserializeAsJson();
             }
             catch (JsonReaderException)
             {
-                using (FileStream stream = File.Open(SavePath, FileMode.Open))
-                {
-                    BinaryFormatter formatter = new BinaryFormatter();
-                    dictionary = (Dictionary<string, object>)formatter.Deserialize(stream);
-                }
+                dictionary = DeserializeAsBinary();
             }
 
             return dictionary;
+        }
+
+        private Dictionary<string, object> DeserializeAsJson ()
+        {
+            string fileContents = File.ReadAllText(SavePath);
+            var deserializedObject = JsonConvert.DeserializeObject<Dictionary<string, object>>(fileContents);
+            
+            return deserializedObject;
+        }
+
+        private Dictionary<string, object> DeserializeAsBinary ()
+        {
+            using (FileStream stream = File.Open(SavePath, FileMode.Open))
+            {
+                BinaryFormatter formatter = new BinaryFormatter();
+                var deserializedObject = (Dictionary<string, object>)formatter.Deserialize(stream);
+                
+                return deserializedObject;
+            }
         }
 
         private void SaveFileAsBinary (object state)

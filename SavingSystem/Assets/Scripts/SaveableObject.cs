@@ -30,7 +30,7 @@ namespace SavingSystem
 
         public void RestoreState (object state)
         {
-            Dictionary<string, object> stateDictionary = null;
+            Dictionary<string, object> stateDictionary;
 
             try
             {

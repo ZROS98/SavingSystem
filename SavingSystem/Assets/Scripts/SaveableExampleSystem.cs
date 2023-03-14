@@ -25,7 +25,7 @@ namespace SavingSystem
 
         public void RestoreState (object state)
         {
-            SaveData saveData = new SaveData();
+            SaveData saveData;
 
             try
             {
