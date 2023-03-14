@@ -31,7 +31,7 @@ namespace SavingSystem
             {
                 saveData = JsonConvert.DeserializeObject<SaveData>(state.ToString());
             }
-            catch (Exception ex)
+            catch (JsonReaderException)
             {
                 saveData = (SaveData)state;
             }

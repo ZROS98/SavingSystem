@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
@@ -42,13 +41,13 @@ namespace SavingSystem
             }
 
             string fileContents = File.ReadAllText(SavePath);
-            Dictionary<string, object> dictionary = null;
+            Dictionary<string, object> dictionary;
 
             try
-            { 
+            {
                 dictionary = JsonConvert.DeserializeObject<Dictionary<string, object>>(fileContents);
             }
-            catch (Exception ex)
+            catch (JsonReaderException)
             {
                 using (FileStream stream = File.Open(SavePath, FileMode.Open))
                 {

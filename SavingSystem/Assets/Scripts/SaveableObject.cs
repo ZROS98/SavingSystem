@@ -36,7 +36,7 @@ namespace SavingSystem
             {
                 stateDictionary = JsonConvert.DeserializeObject<Dictionary<string, object>>(state.ToString());
             }
-            catch (Exception ex)
+            catch (JsonReaderException)
             {
                 stateDictionary = (Dictionary<string, object>)state;
             }
