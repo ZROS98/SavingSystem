@@ -41,6 +41,16 @@ namespace SavingSystem
                 }
             }
         }
+        
+        protected virtual void Awake ()
+        {
+            Initialize();
+        }
+        
+        private void Initialize ()
+        {
+            GlobalSaveableObjectListHolder.GlobalSavingSystemCollection.Add(this);
+        }
 
         private Dictionary<string, object> DeserializeFileToDictionary (object state)
         {

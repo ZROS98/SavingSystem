@@ -36,7 +36,7 @@ namespace SavingSystem
         
         private void RestoreState (Dictionary<string, object> state)
         {
-            foreach (SaveableObject saveable in FindObjectsOfType<SaveableObject>())
+            foreach (SaveableObject saveable in GlobalSaveableObjectListHolder.GlobalSavingSystemCollection)
             {
                 if (state.TryGetValue(saveable.CurrentId, out object value))
                 {
@@ -63,7 +63,7 @@ namespace SavingSystem
 
         private void CaptureState (Dictionary<string, object> state)
         {
-            foreach (SaveableObject saveable in FindObjectsOfType<SaveableObject>())
+            foreach (SaveableObject saveable in GlobalSaveableObjectListHolder.GlobalSavingSystemCollection)
             {
                 state[saveable.CurrentId] = saveable.CaptureState();
             }
