@@ -12,28 +12,99 @@ namespace SavingSystem
 {
     public class CloudStorageMock : MonoBehaviour
     {
+        private SaveLoadSystem CurrentSaveLoadSystem { get; set; }
+
         public Dictionary<string, object> SaveDataDictionary { get; set; }
 
-        public void SaveJsonToCloud (string fileName, object data, string cloudAddress, string apiKey)
+        protected virtual void Awake ()
         {
-            string jsonData = JsonConvert.SerializeObject(data);
+            Initialize();
+        }
+        
+        public void Load ()
+        {
+            LoadDataFromCloud();
+            StartCoroutine(WaitForData());
+        }
+        
+        private IEnumerator WaitForData ()
+        {
+            yield return new WaitUntil(() => SaveDataDictionary != null);
 
-            // Send the data to the cloud storage API
-            string apiEndpoint = $"{cloudAddress}/save?apiKey={apiKey}&fileName={fileName}";
-            // In a real implementation, here would be logic to send the request
-            Debug.Log($"Sending JSON data to {apiEndpoint}: {jsonData}");
+            RestoreState(SaveDataDictionary);
+        }
+        
+        private void RestoreState (Dictionary<string, object> state)
+        {
+            foreach (SaveableObject saveable in FindObjectsOfType<SaveableObject>())
+            {
+                if (state.TryGetValue(saveable.CurrentId, out object value))
+                {
+                    saveable.RestoreState(value);
+                }
+            }
+        }
+        
+        public void SaveBinary ()
+        {
+            var state = CurrentSaveLoadSystem.LoadFile();
+            CaptureState(state);
+            string binaryData = SaveFileAsBinary(state);
+            SaveBinaryToCloud(binaryData);
         }
 
-        public void SaveBinaryToCloud (string fileName, byte[] data, string cloudAddress, string apiKey)
+        public void SaveJson ()
         {
-            // Send the binary data to the cloud storage API
-            string apiEndpoint = $"{cloudAddress}/save?apiKey={apiKey}&fileName={fileName}";
-            // In a real implementation, here would be logic to send the request
-            Debug.Log($"Sending binary data to {apiEndpoint}: {data.Length} bytes");
+            var state = CurrentSaveLoadSystem.LoadFile();
+            CaptureState(state);
+            string jsonData = SaveFileAsJson(state);
+            SaveJsonToCloud(jsonData);
+        }
+
+        private void CaptureState (Dictionary<string, object> state)
+        {
+            foreach (SaveableObject saveable in FindObjectsOfType<SaveableObject>())
+            {
+                state[saveable.CurrentId] = saveable.CaptureState();
+            }
+        }
+        
+        private void Initialize ()
+        {
+            CurrentSaveLoadSystem = new SaveLoadSystem();
+        }
+
+        public string SaveFileAsBinary (object state)
+        {
+            using (MemoryStream stream = new MemoryStream())
+            {
+                BinaryFormatter formatter = new BinaryFormatter();
+                formatter.Serialize(stream, state);
+                byte[] bytes = stream.ToArray();
+                string binaryString = Encoding.UTF8.GetString(bytes);
+
+                return binaryString;
+            }
+        }
+
+        public string SaveFileAsJson (object state)
+        {
+            string json = JsonConvert.SerializeObject(state);
+            return json;
+        }
+
+        private void SaveJsonToCloud (string jsonData)
+        {
+            Debug.Log("Json data has been uploaded to cloud");
+        }
+
+        private void SaveBinaryToCloud (string binaryData)
+        {
+            Debug.Log("Binary data has been uploaded to cloud");
         }
 
         [ContextMenu("LoadDataFromCloud")]
-        public void LoadDataFromCloud (/*string saveCloudAddress*/)
+        public void LoadDataFromCloud ()
         {
             string saveCloudAddress = "https://drive.google.com/uc?export=download&id=1RonmRzcvwv1eHmb9rNYEnSdNePyUseYM";
             StartCoroutine(LoadSaveFromCloudProcess(saveCloudAddress));
@@ -60,7 +131,7 @@ namespace SavingSystem
         private Dictionary<string, object> DeserializeDataToDictionary (byte[] saveData)
         {
             Dictionary<string, object> dictionary;
-            
+
             try
             {
                 dictionary = DeserializeJsonData(saveData);
@@ -69,7 +140,7 @@ namespace SavingSystem
             {
                 dictionary = DeserializeBinaryData(saveData);
             }
-            
+
             return dictionary;
         }
 
@@ -77,7 +148,7 @@ namespace SavingSystem
         {
             string dataString = Encoding.UTF8.GetString(saveData);
             var deserializedObject = JsonConvert.DeserializeObject<Dictionary<string, object>>(dataString);
-            
+
             return deserializedObject;
         }
 
