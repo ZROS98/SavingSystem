@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace SavingSystem
@@ -7,53 +6,34 @@ namespace SavingSystem
     {
         private SaveLoadSystem CurrentSaveLoadSystem {get; set; }
         
-        protected virtual void Awake ()
-        {
-            Initialize();
-        }
-
         public void SaveBinary ()
         {
             var state = CurrentSaveLoadSystem.LoadFile();
-            CaptureState(state);
+            CurrentSaveLoadSystem.CaptureState(state);
             CurrentSaveLoadSystem.SaveFileAsBinary(state);
         }
 
         public void SaveJson ()
         {
             var state = CurrentSaveLoadSystem.LoadFile();
-            CaptureState(state);
+            CurrentSaveLoadSystem.CaptureState(state);
             CurrentSaveLoadSystem.SaveFileAsJson(state);
         }
 
         public void Load ()
         {
             var state = CurrentSaveLoadSystem.LoadFile();
-            RestoreState(state);
+            CurrentSaveLoadSystem.RestoreState(state);
+        }
+        
+        protected virtual void Awake ()
+        {
+            Initialize();
         }
 
         private void Initialize ()
         {
             CurrentSaveLoadSystem = new SaveLoadSystem();
-        }
-
-        private void CaptureState (Dictionary<string, object> state)
-        {
-            foreach (SaveableObject saveable in GlobalSaveableObjectListHolder.GlobalSavingSystemCollection)
-            {
-                state[saveable.CurrentId] = saveable.CaptureState();
-            }
-        }
-
-        private void RestoreState (Dictionary<string, object> state)
-        {
-            foreach (SaveableObject saveable in GlobalSaveableObjectListHolder.GlobalSavingSystemCollection)
-            {
-                if (state.TryGetValue(saveable.CurrentId, out object value))
-                {
-                    saveable.RestoreState(value);
-                }
-            }
         }
     }
 }

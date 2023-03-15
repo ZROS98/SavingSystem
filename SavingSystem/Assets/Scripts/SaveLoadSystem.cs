@@ -35,6 +35,25 @@ namespace SavingSystem
             }
         }
         
+        public void CaptureState (Dictionary<string, object> state)
+        {
+            foreach (SaveableObject saveable in GlobalSaveableObjectListHolder.GlobalSavingSystemCollection)
+            {
+                state[saveable.CurrentId] = saveable.CaptureState();
+            }
+        }
+
+        public void RestoreState (Dictionary<string, object> state)
+        {
+            foreach (SaveableObject saveable in GlobalSaveableObjectListHolder.GlobalSavingSystemCollection)
+            {
+                if (state.TryGetValue(saveable.CurrentId, out object value))
+                {
+                    saveable.RestoreState(value);
+                }
+            }
+        }
+        
         public Dictionary<string, object> LoadFile ()
         {
             if (File.Exists(SavePath) == false)
