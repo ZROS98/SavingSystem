@@ -32,15 +32,15 @@ namespace SavingSystem
             Debug.Log($"Sending binary data to {apiEndpoint}: {data.Length} bytes");
         }
 
-        public void LoadDataFromCloud (string saveCloudAddress)
+        [ContextMenu("LoadDataFromCloud")]
+        public void LoadDataFromCloud (/*string saveCloudAddress*/)
         {
+            string saveCloudAddress = "https://drive.google.com/uc?export=download&id=1RonmRzcvwv1eHmb9rNYEnSdNePyUseYM";
             StartCoroutine(LoadSaveFromCloudProcess(saveCloudAddress));
         }
 
         private IEnumerator LoadSaveFromCloudProcess (string saveCloudAddress)
         {
-            string saveData;
-
             using (UnityWebRequest unityWebRequest = UnityWebRequest.Get(saveCloudAddress))
             {
                 yield return unityWebRequest.SendWebRequest();
@@ -51,16 +51,16 @@ namespace SavingSystem
                 }
                 else
                 {
-                    saveData = unityWebRequest.downloadHandler.text;
+                    byte[] saveData = unityWebRequest.downloadHandler.data;
                     SaveDataDictionary = DeserializeDataToDictionary(saveData);
                 }
             }
         }
 
-        private Dictionary<string, object> DeserializeDataToDictionary (string saveData)
+        private Dictionary<string, object> DeserializeDataToDictionary (byte[] saveData)
         {
             Dictionary<string, object> dictionary;
-
+            
             try
             {
                 dictionary = DeserializeJsonData(saveData);
@@ -69,21 +69,21 @@ namespace SavingSystem
             {
                 dictionary = DeserializeBinaryData(saveData);
             }
-
+            
             return dictionary;
         }
 
-        private Dictionary<string, object> DeserializeJsonData (string saveData)
+        private Dictionary<string, object> DeserializeJsonData (byte[] saveData)
         {
-            var deserializedObject = JsonConvert.DeserializeObject<Dictionary<string, object>>(saveData);
+            string dataString = Encoding.UTF8.GetString(saveData);
+            var deserializedObject = JsonConvert.DeserializeObject<Dictionary<string, object>>(dataString);
+            
             return deserializedObject;
         }
 
-        private Dictionary<string, object> DeserializeBinaryData (string saveData)
+        private Dictionary<string, object> DeserializeBinaryData (byte[] saveData)
         {
-            byte[] data = Encoding.UTF8.GetBytes(saveData);
-
-            using (MemoryStream stream = new MemoryStream(data))
+            using (MemoryStream stream = new MemoryStream(saveData))
             {
                 BinaryFormatter formatter = new BinaryFormatter();
                 var deserializedObject = (Dictionary<string, object>)formatter.Deserialize(stream);
