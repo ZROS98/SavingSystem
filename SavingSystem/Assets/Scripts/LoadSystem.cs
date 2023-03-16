@@ -2,45 +2,16 @@ using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using Newtonsoft.Json;
-using UnityEngine;
 
 namespace SavingSystem
 {
-    public class SaveLoadSystem
+    public class LoadSystem
     {
-        private string SavePath
-        {
-            get { return $"{Application.persistentDataPath}/save.txt"; }
-        }
-        
-        public SaveLoadSystem ()
-        {
-        }
-        
-        public void SaveFileAsBinary (object state)
-        {
-            using (FileStream stream = File.Open(SavePath, FileMode.Create))
-            {
-                BinaryFormatter formatter = new BinaryFormatter();
-                formatter.Serialize(stream, state);
-            }
-        }
+        private string SavePath { get; set; }
 
-        public void SaveFileAsJson (object state)
+        public LoadSystem (string savePath)
         {
-            using (StreamWriter writer = new StreamWriter(SavePath))
-            {
-                string json = JsonConvert.SerializeObject(state);
-                writer.Write(json);
-            }
-        }
-        
-        public void CaptureState (Dictionary<string, object> state)
-        {
-            foreach (SaveableObject saveable in GlobalSaveableObjectListHolder.GlobalSavingSystemCollection)
-            {
-                state[saveable.CurrentId] = saveable.CaptureState();
-            }
+            SavePath = savePath;
         }
 
         public void RestoreState (Dictionary<string, object> state)
@@ -53,7 +24,7 @@ namespace SavingSystem
                 }
             }
         }
-        
+
         public Dictionary<string, object> LoadFile ()
         {
             if (File.Exists(SavePath) == false)
@@ -67,7 +38,7 @@ namespace SavingSystem
         private Dictionary<string, object> DeserializeFileToDictionary ()
         {
             Dictionary<string, object> dictionary;
-            
+
             try
             {
                 dictionary = DeserializeAsJson();
@@ -84,7 +55,7 @@ namespace SavingSystem
         {
             string fileContents = File.ReadAllText(SavePath);
             var deserializedObject = JsonConvert.DeserializeObject<Dictionary<string, object>>(fileContents);
-            
+
             return deserializedObject;
         }
 
@@ -94,7 +65,7 @@ namespace SavingSystem
             {
                 BinaryFormatter formatter = new BinaryFormatter();
                 var deserializedObject = (Dictionary<string, object>)formatter.Deserialize(stream);
-                
+
                 return deserializedObject;
             }
         }

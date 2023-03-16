@@ -7,10 +7,12 @@ namespace SavingSystem
     {
         private SaveToCloudSystem CurrentSaveToCloudSystem { get; set; }
         private LoadFromCloudSystem CurrentLoadFromCloudSystem { get; set; }
-        private SaveLoadSystem CurrentSaveLoadSystem { get; set; }
+        private LoadSystem CurrentLoadSystem { get; set; }
         
         private const string SAVE_CLOUD_ADDRESS = "https://drive.google.com/uc?export=download&id=1RonmRzcvwv1eHmb9rNYEnSdNePyUseYM";
         
+        private string SavePath => $"{Application.persistentDataPath}/save.txt";
+
         protected virtual void Awake ()
         {
             Initialize();
@@ -24,7 +26,7 @@ namespace SavingSystem
         
         public void SaveBinary ()
         {
-            var state = CurrentSaveLoadSystem.LoadFile();
+            var state = CurrentLoadSystem.LoadFile();
             CurrentSaveToCloudSystem.CaptureState(state);
             string binaryData = CurrentSaveToCloudSystem.SaveFileAsBinary(state);
             CurrentSaveToCloudSystem.SaveBinaryToCloud(binaryData);
@@ -32,7 +34,7 @@ namespace SavingSystem
 
         public void SaveJson ()
         {
-            var state = CurrentSaveLoadSystem.LoadFile();
+            var state = CurrentLoadSystem.LoadFile();
             CurrentSaveToCloudSystem.CaptureState(state);
             string jsonData = CurrentSaveToCloudSystem.SaveFileAsJson(state);
             CurrentSaveToCloudSystem.SaveJsonToCloud(jsonData);
@@ -49,7 +51,7 @@ namespace SavingSystem
         {
             CurrentSaveToCloudSystem = new SaveToCloudSystem();
             CurrentLoadFromCloudSystem = new LoadFromCloudSystem(this);
-            CurrentSaveLoadSystem = new SaveLoadSystem();
+            CurrentLoadSystem = new LoadSystem(SavePath);
         }
     }
 }
