@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class BaseSaveableExampleSystem : MonoBehaviour
 {
-    protected SaveableExampleDeserializer CurrentSaveableExampleDeserializer { get; set; }
+    protected SaveableDeserializer CurrentSaveableDeserializer { get; set; }
     
     protected virtual void Awake ()
     {
@@ -12,6 +12,6 @@ public class BaseSaveableExampleSystem : MonoBehaviour
 
     private void Initialize ()
     {
-        CurrentSaveableExampleDeserializer = new SaveableExampleDeserializer();
+        CurrentSaveableDeserializer = new SaveableDeserializer();
     }
 }

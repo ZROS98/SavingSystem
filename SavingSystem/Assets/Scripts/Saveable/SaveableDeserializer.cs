@@ -2,9 +2,9 @@ using Newtonsoft.Json;
 
 namespace SavingSystem
 {
-    public class SaveableExampleDeserializer
+    public class SaveableDeserializer
     {
-        public SaveableExampleDeserializer ()
+        public SaveableDeserializer ()
         {
         }
 

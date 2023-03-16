@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace SavingSystem
 {
-    public class SaveableExampleSystem : BaseSaveableExampleSystem, ISaveable
+    public class SaveableExample : BaseSaveableExampleSystem, ISaveable
     {
         [field: SerializeField]
         private string Name { get; set; } = String.Empty;
@@ -24,7 +24,7 @@ namespace SavingSystem
 
         public void RestoreState (object state)
         {
-            SaveData saveData = CurrentSaveableExampleDeserializer.DeserializeFileToSaveData(state);
+            SaveData saveData = CurrentSaveableDeserializer.DeserializeFileToSaveData(state);
             
             Name = saveData.name;
             Level = saveData.level;
