@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using Newtonsoft.Json;
 using UnityEngine;
 
 namespace SavingSystem
@@ -9,6 +8,8 @@ namespace SavingSystem
     {
         [field: SerializeField]
         private string ObjectId { get; set; } = string.Empty;
+
+        private DictionaryDeserializer CurrentDictionaryDeserializer { get; set; }
 
         public string CurrentId
         {
@@ -32,7 +33,7 @@ namespace SavingSystem
         {
             foreach (ISaveable saveable in GetComponents<ISaveable>())
             {
-                var stateDictionary = DeserializeFileToDictionary(state);
+                var stateDictionary = CurrentDictionaryDeserializer.DeserializeFileToDictionary(state);
                 string typeName = saveable.GetType().ToString();
 
                 if (stateDictionary.TryGetValue(typeName, out object value))
@@ -41,43 +42,16 @@ namespace SavingSystem
                 }
             }
         }
-        
+
         protected virtual void Awake ()
         {
             Initialize();
         }
-        
+
         private void Initialize ()
         {
             GlobalSaveableObjectListHolder.GlobalSavingSystemCollection.Add(this);
-        }
-
-        private Dictionary<string, object> DeserializeFileToDictionary (object state)
-        {
-            Dictionary<string, object> stateDictionary;
-
-            try
-            {
-                stateDictionary = DeserializeAsJson(state);
-            }
-            catch (JsonReaderException)
-            {
-                stateDictionary = DeserializeAsBinary(state);
-            }
-
-            return stateDictionary;
-        }
-
-        private Dictionary<string, object> DeserializeAsJson (object state)
-        {
-           var stateDictionary = JsonConvert.DeserializeObject<Dictionary<string, object>>(state.ToString());
-           return stateDictionary;
-        }
-
-        private Dictionary<string, object> DeserializeAsBinary (object state)
-        {
-           var stateDictionary = (Dictionary<string, object>)state;
-           return stateDictionary;
+            CurrentDictionaryDeserializer = new DictionaryDeserializer();
         }
 
         [ContextMenu("Generate Id")]
