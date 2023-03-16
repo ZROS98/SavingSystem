@@ -5,7 +5,8 @@ namespace SavingSystem
 {
     public class CloudStorageMock : MonoBehaviour
     {
-        private SaveLoadToCloudSystem CurrentSaveLoadToCloudSystem { get; set; }
+        private SaveToCloudSystem CurrentSaveToCloudSystem { get; set; }
+        private LoadFromCloudSystem CurrentLoadFromCloudSystem { get; set; }
         private SaveLoadSystem CurrentSaveLoadSystem { get; set; }
         
         private const string SAVE_CLOUD_ADDRESS = "https://drive.google.com/uc?export=download&id=1RonmRzcvwv1eHmb9rNYEnSdNePyUseYM";
@@ -17,37 +18,38 @@ namespace SavingSystem
         
         public void Load ()
         {
-            CurrentSaveLoadToCloudSystem.LoadDataFromCloud(SAVE_CLOUD_ADDRESS);
+            CurrentLoadFromCloudSystem.LoadDataFromCloud(SAVE_CLOUD_ADDRESS);
             StartCoroutine(WaitForDataProcess());
         }
         
         public void SaveBinary ()
         {
             var state = CurrentSaveLoadSystem.LoadFile();
-            CurrentSaveLoadToCloudSystem.CaptureState(state);
-            string binaryData = CurrentSaveLoadToCloudSystem.SaveFileAsBinary(state);
-            CurrentSaveLoadToCloudSystem.SaveBinaryToCloud(binaryData);
+            CurrentSaveToCloudSystem.CaptureState(state);
+            string binaryData = CurrentSaveToCloudSystem.SaveFileAsBinary(state);
+            CurrentSaveToCloudSystem.SaveBinaryToCloud(binaryData);
         }
 
         public void SaveJson ()
         {
             var state = CurrentSaveLoadSystem.LoadFile();
-            CurrentSaveLoadToCloudSystem.CaptureState(state);
-            string jsonData = CurrentSaveLoadToCloudSystem.SaveFileAsJson(state);
-            CurrentSaveLoadToCloudSystem.SaveJsonToCloud(jsonData);
+            CurrentSaveToCloudSystem.CaptureState(state);
+            string jsonData = CurrentSaveToCloudSystem.SaveFileAsJson(state);
+            CurrentSaveToCloudSystem.SaveJsonToCloud(jsonData);
         }
 
         private IEnumerator WaitForDataProcess ()
         {
-            yield return new WaitUntil(() => CurrentSaveLoadToCloudSystem.SaveDataDictionary != null);
+            yield return new WaitUntil(() => CurrentLoadFromCloudSystem.SaveDataDictionary != null);
 
-            CurrentSaveLoadToCloudSystem.RestoreState(CurrentSaveLoadToCloudSystem.SaveDataDictionary);
+            CurrentLoadFromCloudSystem.RestoreState(CurrentLoadFromCloudSystem.SaveDataDictionary);
         }
 
         private void Initialize ()
         {
+            CurrentSaveToCloudSystem = new SaveToCloudSystem();
+            CurrentLoadFromCloudSystem = new LoadFromCloudSystem(this);
             CurrentSaveLoadSystem = new SaveLoadSystem();
-            CurrentSaveLoadToCloudSystem = new SaveLoadToCloudSystem(this);
         }
     }
 }

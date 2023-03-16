@@ -9,17 +9,17 @@ using UnityEngine.Networking;
 
 namespace SavingSystem
 {
-    public class SaveLoadToCloudSystem
+    public class LoadFromCloudSystem
     {
         public Dictionary<string, object> SaveDataDictionary { get; set; }
-        
+
         private MonoBehaviour CoroutineController { get; set; }
 
-        public SaveLoadToCloudSystem (MonoBehaviour coroutineController)
+        public LoadFromCloudSystem (MonoBehaviour coroutineController)
         {
             CoroutineController = coroutineController;
         }
-        
+
         public void RestoreState (Dictionary<string, object> state)
         {
             foreach (SaveableObject saveable in GlobalSaveableObjectListHolder.GlobalSavingSystemCollection)
@@ -31,46 +31,9 @@ namespace SavingSystem
             }
         }
 
-        public void CaptureState (Dictionary<string, object> state)
-        {
-            foreach (SaveableObject saveable in GlobalSaveableObjectListHolder.GlobalSavingSystemCollection)
-            {
-                state[saveable.CurrentId] = saveable.CaptureState();
-            }
-        }
-        
-        public string SaveFileAsBinary (object state)
-        {
-            using (MemoryStream stream = new MemoryStream())
-            {
-                BinaryFormatter formatter = new BinaryFormatter();
-                formatter.Serialize(stream, state);
-                byte[] bytes = stream.ToArray();
-                string binaryString = Encoding.UTF8.GetString(bytes);
-
-                return binaryString;
-            }
-        }
-
-        public string SaveFileAsJson (object state)
-        {
-            string json = JsonConvert.SerializeObject(state);
-            return json;
-        }
-        
-        public void SaveJsonToCloud (string jsonData)
-        {
-            Debug.Log("Json data has been uploaded to cloud");
-        }
-
-        public void SaveBinaryToCloud (string binaryData)
-        {
-            Debug.Log("Binary data has been uploaded to cloud");
-        }
-
         public void LoadDataFromCloud (string saveCloudAddress)
         {
-             CoroutineController.StartCoroutine(LoadSaveFromCloudProcess(saveCloudAddress));
+            CoroutineController.StartCoroutine(LoadSaveFromCloudProcess(saveCloudAddress));
         }
 
         private IEnumerator LoadSaveFromCloudProcess (string saveCloudAddress)
