@@ -1,8 +1,10 @@
+using System.Collections.Generic;
+
 namespace SavingSystem
 {
     public interface ISaveable
     {
-        public object CaptureState ();
+        public SaveData CaptureState ();
         public void RestoreState (object state);
     }
 }

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace SavingSystem
@@ -12,7 +13,7 @@ namespace SavingSystem
         [field: SerializeField]
         private int Xp { get; set; } = 0;
 
-        public object CaptureState ()
+        public SaveData CaptureState ()
         {
             return new SaveData
             {

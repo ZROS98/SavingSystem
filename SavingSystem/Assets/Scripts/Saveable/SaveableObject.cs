@@ -17,7 +17,7 @@ namespace SavingSystem
             set { ObjectId = value; }
         }
 
-        public object CaptureState ()
+        public Dictionary<string, object> CaptureState ()
         {
             var stateDictionary = new Dictionary<string, object>();
 
