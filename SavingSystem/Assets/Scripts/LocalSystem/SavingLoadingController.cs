@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace SavingSystem
@@ -11,21 +12,21 @@ namespace SavingSystem
 
         public void SaveBinary ()
         {
-            var state = CurrentLoadSystem.LoadFile();
+            Dictionary<string, object> state = CurrentLoadSystem.LoadFile();
             CurrentSaveSystem.CaptureState(state);
             CurrentSaveSystem.SaveFileAsBinary(state);
         }
 
         public void SaveJson ()
         {
-            var state = CurrentLoadSystem.LoadFile();
+            Dictionary<string, object> state = CurrentLoadSystem.LoadFile();
             CurrentSaveSystem.CaptureState(state);
             CurrentSaveSystem.SaveFileAsJson(state);
         }
 
         public void Load ()
         {
-            var state = CurrentLoadSystem.LoadFile();
+            Dictionary<string, object> state = CurrentLoadSystem.LoadFile();
             CurrentLoadSystem.RestoreState(state);
         }
         

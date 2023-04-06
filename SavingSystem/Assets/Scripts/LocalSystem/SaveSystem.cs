@@ -14,7 +14,7 @@ namespace SavingSystem
             SavePath = savePath;
         }
 
-        public void SaveFileAsBinary (object state)
+        public void SaveFileAsBinary (Dictionary<string, object> state)
         {
             using (FileStream stream = File.Open(SavePath, FileMode.Create))
             {
@@ -23,7 +23,7 @@ namespace SavingSystem
             }
         }
 
-        public void SaveFileAsJson (object state)
+        public void SaveFileAsJson (Dictionary<string, object> state)
         {
             using (StreamWriter writer = new StreamWriter(SavePath))
             {
