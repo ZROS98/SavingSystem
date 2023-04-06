@@ -1,8 +1,8 @@
 namespace SavingSystem
 {
-    public interface ISaveable
+    public interface ISaveable<T>
     {
-        public SaveData CaptureState ();
-        public void RestoreState (SaveData state);
+        public T CaptureState ();
+        public void RestoreState (T state);
     }
 }

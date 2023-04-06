@@ -1,14 +1,15 @@
 ﻿using Newtonsoft.Json;
+using Unity.VisualScripting;
 
 namespace SavingSystem
 {
     public class JsonSaveableDeserializer : SaveableDeserializerBase
     {
-        public override SaveData Deserialize (object state)
+        public override SerializableObject Deserialize (SerializableObject state)
         {
             try
             {
-                return JsonConvert.DeserializeObject<SaveData>(state.ToString());
+                return JsonConvert.DeserializeObject<SerializableObject>(state.ToString());
             }
             catch (JsonReaderException)
             {

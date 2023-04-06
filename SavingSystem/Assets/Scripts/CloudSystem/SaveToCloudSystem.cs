@@ -40,12 +40,12 @@ namespace SavingSystem
             return json;
         }
 
-        public void SaveJsonToCloud (string jsonData)
+        private void SaveJsonToCloud (string jsonData)
         {
             Debug.Log("Json data has been uploaded to cloud");
         }
 
-        public void SaveBinaryToCloud (string binaryData)
+        private void SaveBinaryToCloud (string binaryData)
         {
             Debug.Log("Binary data has been uploaded to cloud");
         }

@@ -28,7 +28,7 @@ namespace SavingSystem
             {
                 if (state.TryGetValue(saveable.CurrentId, out object value))
                 {
-                    var stateDictionary = dictionaryDeserializer.DeserializeFileToDictionary(value);
+                    Dictionary<string, object> stateDictionary = dictionaryDeserializer.DeserializeFileToDictionary(value);
                     saveable.RestoreState(stateDictionary);
                 }
             }

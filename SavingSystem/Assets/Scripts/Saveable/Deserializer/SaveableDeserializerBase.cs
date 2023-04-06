@@ -2,6 +2,6 @@ namespace SavingSystem
 {
     public abstract class SaveableDeserializerBase
     {
-        public abstract SaveData Deserialize (object state);
+        public abstract SerializableObject Deserialize (SerializableObject state);
     }
 }

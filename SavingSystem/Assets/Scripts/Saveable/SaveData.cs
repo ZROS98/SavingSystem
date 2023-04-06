@@ -3,7 +3,7 @@ using System;
 namespace SavingSystem
 {
     [Serializable]
-    public struct SaveData
+    public struct SaveData : SerializableObject
     {
         public string name;
         public int level;

@@ -9,7 +9,7 @@ namespace SavingSystem
         {
         }
 
-        public SaveData DeserializeFileToSaveData (object state)
+        public SerializableObject DeserializeFileToSaveData (SerializableObject state)
         {
             try
             {

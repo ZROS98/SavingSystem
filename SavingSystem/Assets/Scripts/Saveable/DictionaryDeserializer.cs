@@ -5,35 +5,27 @@ namespace SavingSystem
 {
     public class DictionaryDeserializer
     {
-        public DictionaryDeserializer ()
+        public IDictionary<string, SerializableObject> DeserializeFileToDictionary (object state)
         {
-        }
-
-        public Dictionary<string, object> DeserializeFileToDictionary (object state)
-        {
-            Dictionary<string, object> stateDictionary;
-
             try
             {
-                stateDictionary = DeserializeAsJson(state);
+                return DeserializeAsJson(state);
             }
             catch (JsonReaderException)
             {
-                stateDictionary = DeserializeAsBinary(state);
+                return DeserializeAsBinary(state);
             }
+        }
 
+        private IDictionary<string, SerializableObject> DeserializeAsJson (object state)
+        {
+            var stateDictionary = JsonConvert.DeserializeObject<Dictionary<string, SerializableObject>>(state.ToString());
             return stateDictionary;
         }
 
-        private Dictionary<string, object> DeserializeAsJson (object state)
+        private IDictionary<string, SerializableObject> DeserializeAsBinary (object state)
         {
-            var stateDictionary = JsonConvert.DeserializeObject<Dictionary<string, object>>(state.ToString());
-            return stateDictionary;
-        }
-
-        private Dictionary<string, object> DeserializeAsBinary (object state)
-        {
-            var stateDictionary = (Dictionary<string, object>)state;
+            IDictionary<string, SerializableObject> stateDictionary = (Dictionary<string, SerializableObject>)state;
             return stateDictionary;
         }
     }

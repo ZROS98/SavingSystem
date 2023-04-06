@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using Newtonsoft.Json;
+using Unity.VisualScripting;
 
 namespace SavingSystem
 {
@@ -14,21 +15,21 @@ namespace SavingSystem
             SavePath = savePath;
         }
 
-        public void RestoreState (Dictionary<string, object> state)
+        public void RestoreState (Dictionary<string, SaveableObject> state)
         {
             DictionaryDeserializer dictionaryDeserializer = new DictionaryDeserializer();
             
             foreach (SaveableObject saveable in GlobalSaveableObjectListHolder.GlobalSavingSystemCollection)
             {
-                if (state.TryGetValue(saveable.CurrentId, out object value))
+                if (state.TryGetValue(saveable.CurrentId, out SaveableObject value))
                 {
-                    Dictionary<string, object> stateDictionary = dictionaryDeserializer.DeserializeFileToDictionary(value);
+                    IDictionary<string, SerializableObject> stateDictionary = dictionaryDeserializer.DeserializeFileToDictionary(value);
                     saveable.RestoreState(stateDictionary);
                 }
             }
         }
 
-        public Dictionary<string, object> LoadFile ()
+        public IDictionary<string, object> LoadFile ()
         {
             if (File.Exists(SavePath) == false)
             {
@@ -38,39 +39,52 @@ namespace SavingSystem
             return DeserializeFileToDictionary();
         }
 
-        private Dictionary<string, object> DeserializeFileToDictionary ()
+        private IDictionary<string, object> DeserializeFileToDictionary ()
         {
-            Dictionary<string, object> dictionary;
-
             try
             {
-                dictionary = DeserializeAsJson();
+                return DeserializeAsJson();
             }
             catch (JsonReaderException)
             {
-                dictionary = DeserializeAsBinary();
+                return DeserializeAsBinary();
             }
 
-            return dictionary;
         }
 
-        private Dictionary<string, object> DeserializeAsJson ()
+        private IDictionary<string, object> DeserializeAsJson ()
         {
+            byte[] saveData;
+            saveData = File.ReadAllBytes(SavePath);
+            string x = saveData.ToString();
+
             string fileContents = File.ReadAllText(SavePath);
-            var deserializedObject = JsonConvert.DeserializeObject<Dictionary<string, object>>(fileContents);
+            IDictionary<string, object> deserializedObject = (Dictionary<string, object>)new Dictionary<string, object>(JsonConvert.DeserializeObject<Dictionary<string, object>>(fileContents)).AsReadOnlyCollection();
 
             return deserializedObject;
         }
 
-        private Dictionary<string, object> DeserializeAsBinary ()
+        private IDictionary<string, object> DeserializeAsBinary ()
         {
-            using (FileStream stream = File.Open(SavePath, FileMode.Open))
+            byte[] saveData = File.ReadAllBytes(SavePath);
+
+            using (MemoryStream stream = new MemoryStream(saveData))
             {
                 BinaryFormatter formatter = new BinaryFormatter();
-                var deserializedObject = (Dictionary<string, object>)formatter.Deserialize(stream);
+                IDictionary<string, object> deserializedObject = (Dictionary<string, object>)formatter.Deserialize(stream);
 
                 return deserializedObject;
             }
+            
+            
+            
+            // using (FileStream stream = File.Open(SavePath, FileMode.Open))
+            // {
+            //     BinaryFormatter formatter = new BinaryFormatter();
+            //     var deserializedObject = (Dictionary<string, object>)formatter.Deserialize(stream);
+            //
+            //     return deserializedObject;
+            // }
         }
     }
 }

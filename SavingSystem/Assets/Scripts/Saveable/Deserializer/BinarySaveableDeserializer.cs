@@ -2,14 +2,9 @@
 {
     public class BinarySaveableDeserializer : SaveableDeserializerBase
     {
-        public override SaveData Deserialize (object state)
+        public override SerializableObject Deserialize (SerializableObject state)
         {
-            if (state is SaveData saveData)
-            {
-                return saveData;
-            }
-
-            throw new SaveDataDeserializationException("Failed to deserialize SaveData from binary.");
+            return state;
         }
     }
 }

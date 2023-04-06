@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace SavingSystem
@@ -15,11 +16,11 @@ namespace SavingSystem
             set { ObjectId = value; }
         }
 
-        public Dictionary<string, object> CaptureState ()
+        public IDictionary<string, SerializableObject> CaptureState ()
         {
-            var stateDictionary = new Dictionary<string, object>();
+            IDictionary<string, SerializableObject> stateDictionary = new Dictionary<string, SerializableObject>();
 
-            foreach (ISaveable saveable in GetComponents<ISaveable>())
+            foreach (ISaveable<SerializableObject> saveable in GetComponents<ISaveable<SerializableObject>>())
             {
                 stateDictionary[saveable.GetType().ToString()] = saveable.CaptureState();
             }
@@ -27,18 +28,18 @@ namespace SavingSystem
             return stateDictionary;
         }
 
-        public void RestoreState (Dictionary<string, object> stateDictionary)
+        public void RestoreState (IDictionary<string, SerializableObject> stateDictionary)
         {
             SaveableDeserializer saveableDeserializer = new SaveableDeserializer();
             
-            foreach (ISaveable saveable in GetComponents<ISaveable>())
+            foreach (ISaveable<SerializableObject> saveable in GetComponents<ISaveable<SerializableObject>>())
             {
                 string typeName = saveable.GetType().ToString();
 
-                if (stateDictionary.TryGetValue(typeName, out object value))
+                if (stateDictionary.TryGetValue(typeName, out SerializableObject value))
                 {
-                    SaveData saveData = saveableDeserializer.DeserializeFileToSaveData(value);
-                    saveable.RestoreState(saveData);
+                    SerializableObject serializable = saveableDeserializer.DeserializeFileToSaveData(value);
+                    saveable.RestoreState(serializable);
                 }
             }
         }

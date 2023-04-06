@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace SavingSystem
 {
-    public class SaveableExample : MonoBehaviour, ISaveable
+    public class SaveableExample : MonoBehaviour, ISaveable<SaveData>
     {
         [field: SerializeField]
         private string Name { get; set; } = String.Empty;
