@@ -16,11 +16,14 @@ namespace SavingSystem
 
         public void RestoreState (Dictionary<string, object> state)
         {
+            DictionaryDeserializer dictionaryDeserializer = new DictionaryDeserializer();
+            
             foreach (SaveableObject saveable in GlobalSaveableObjectListHolder.GlobalSavingSystemCollection)
             {
                 if (state.TryGetValue(saveable.CurrentId, out object value))
                 {
-                    saveable.RestoreState(value);
+                    Dictionary<string, object> stateDictionary = dictionaryDeserializer.DeserializeFileToDictionary(value);
+                    saveable.RestoreState(stateDictionary);
                 }
             }
         }

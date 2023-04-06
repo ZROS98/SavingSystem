@@ -9,8 +9,6 @@ namespace SavingSystem
         [field: SerializeField]
         private string ObjectId { get; set; } = string.Empty;
 
-        private DictionaryDeserializer CurrentDictionaryDeserializer { get; set; }
-
         public string CurrentId
         {
             get { return ObjectId; }
@@ -29,16 +27,18 @@ namespace SavingSystem
             return stateDictionary;
         }
 
-        public void RestoreState (object state)
+        public void RestoreState (Dictionary<string, object> stateDictionary)
         {
+            SaveableDeserializer saveableDeserializer = new SaveableDeserializer();
+            
             foreach (ISaveable saveable in GetComponents<ISaveable>())
             {
-                var stateDictionary = CurrentDictionaryDeserializer.DeserializeFileToDictionary(state);
                 string typeName = saveable.GetType().ToString();
 
                 if (stateDictionary.TryGetValue(typeName, out object value))
                 {
-                    saveable.RestoreState(value);
+                    SaveData saveData = saveableDeserializer.DeserializeFileToSaveData(value);
+                    saveable.RestoreState(saveData);
                 }
             }
         }
@@ -51,7 +51,6 @@ namespace SavingSystem
         private void Initialize ()
         {
             GlobalSaveableObjectListHolder.GlobalSavingSystemCollection.Add(this);
-            CurrentDictionaryDeserializer = new DictionaryDeserializer();
         }
 
         [ContextMenu("Generate Id")]

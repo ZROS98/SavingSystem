@@ -1,10 +1,9 @@
 using System;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace SavingSystem
 {
-    public class SaveableExample : BaseSaveableExampleSystem, ISaveable
+    public class SaveableExample : MonoBehaviour, ISaveable
     {
         [field: SerializeField]
         private string Name { get; set; } = String.Empty;
@@ -23,10 +22,8 @@ namespace SavingSystem
             };
         }
 
-        public void RestoreState (object state)
+        public void RestoreState (SaveData saveData)
         {
-            SaveData saveData = CurrentSaveableDeserializer.DeserializeFileToSaveData(state);
-            
             Name = saveData.name;
             Level = saveData.level;
             Xp = saveData.xp;
